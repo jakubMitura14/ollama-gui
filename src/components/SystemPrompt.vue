@@ -7,7 +7,7 @@ import ModelSelector from './ModelSelector.vue'
 const { setConfig, initializeConfig } = useConfig()
 const { textarea } = useTextareaAutosize()
 const configInput = ref('')
-const defaultConfigInput = ref('')
+const defaultConfigInput = ref('aaaaaaa  dddddddddd  aaaaaa')
 import { IconWritingSign } from '@tabler/icons-vue'
 
 onMounted(() => {
