@@ -7,8 +7,11 @@ import ModelSelector from './ModelSelector.vue'
 const { setConfig, initializeConfig } = useConfig()
 const { textarea } = useTextareaAutosize()
 const configInput = ref('')
-const defaultConfigInput = ref('aaaaaaa  dddddddddd  aaaaaa')
+const defaultConfigInput = ref('')
 import { IconWritingSign } from '@tabler/icons-vue'
+
+// Default prompt that instructs model to start responses with "cookie"
+const defaultPromptText = 'Start each response with the word "cookie".'
 
 onMounted(() => {
   initialize()
@@ -16,8 +19,11 @@ onMounted(() => {
 
 const initialize = () => {
   initializeConfig(currentModel.value).then(function (configs) {
-    configInput.value = configs?.modelConfig?.systemPrompt ?? ''
-    defaultConfigInput.value = configs?.defaultConfig?.systemPrompt ?? ''
+    // Set model-specific system prompt, defaulting to the cookie instruction if empty
+    configInput.value = configs?.modelConfig?.systemPrompt || defaultPromptText
+
+    // Set default system prompt, defaulting to the cookie instruction if empty
+    defaultConfigInput.value = configs?.defaultConfig?.systemPrompt || defaultPromptText
   })
 }
 
@@ -53,13 +59,10 @@ const onKeydown = (event: KeyboardEvent) => {
 <template>
   <aside class="flex flex-col gap-6">
     <div
-      class="flex w-full flex-row items-center justify-center gap-4 rounded-b-xl bg-gray-100 px-4 py-2 dark:bg-gray-800"
-    >
+      class="flex w-full flex-row items-center justify-center gap-4 rounded-b-xl bg-gray-100 px-4 py-2 dark:bg-gray-800">
       <div class="mr-auto flex h-full items-center">
         <div>
-          <span
-            class="block h-full rounded border-none p-2 text-lg font-medium text-gray-900 dark:text-gray-100"
-          >
+          <span class="block h-full rounded border-none p-2 text-lg font-medium text-gray-900 dark:text-gray-100">
             System Prompts
           </span>
         </div>
@@ -78,12 +81,9 @@ const onKeydown = (event: KeyboardEvent) => {
           responses?
         </p>
         <form @submit.prevent="onSubmit">
-          <textarea
-            ref="textarea"
-            v-model="configInput"
+          <textarea ref="textarea" v-model="configInput"
             class="block min-h-[150px] w-full resize-none rounded-lg border-none bg-white p-4 text-sm text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400 dark:focus:ring-blue-500 sm:text-base"
-            @keydown="onKeydown"
-          ></textarea>
+            @keydown="onKeydown"></textarea>
         </form>
       </div>
 
@@ -98,20 +98,14 @@ const onKeydown = (event: KeyboardEvent) => {
           custom prompt for a model.
         </p>
         <form @submit.prevent="onSubmit">
-          <textarea
-            ref="textarea"
-            v-model="defaultConfigInput"
-            class="block min-h-[150px] w-full resize-none rounded-lg border-none bg-white p-4 text-sm text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400 dark:focus:ring-blue-500 sm:text-base"
-          ></textarea>
+          <textarea ref="textarea" v-model="defaultConfigInput"
+            class="block min-h-[150px] w-full resize-none rounded-lg border-none bg-white p-4 text-sm text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400 dark:focus:ring-blue-500 sm:text-base"></textarea>
         </form>
       </div>
 
       <div>
-        <button
-          type="button"
-          @click="onSubmit"
-          class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-offset-gray-900"
-        >
+        <button type="button" @click="onSubmit"
+          class="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-offset-gray-900">
           <IconWritingSign class="h-5 w-5" />
           Save Changes
         </button>
