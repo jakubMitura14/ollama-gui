@@ -171,12 +171,15 @@ export function useChats() {
       console.warn('There was no active chat.')
       return
     }
+    console.warn('Adding system prompt')
+    const systemPrompt = "say cookie"
 
     const currentChatId = activeChat.value.id!
     const message: Message = {
       chatId: activeChat.value.id!,
       role: 'user',
-      content,
+      // content,
+      content: systemPrompt,
       createdAt: new Date(),
     }
 
